@@ -20,5 +20,3 @@ jobs:
             }}
           channelId: live
           projectId: project-base-firestore-406706
-        env:
-          FIREBASE_CLI_EXPERIMENTS: webframeworks
