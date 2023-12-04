@@ -14,6 +14,7 @@ angularfire-start/functions/node_modules
 angularfire-start/.angular
 angularfire-start/.vscode
 angularfire-start/.firebase
+angularfire-start/dist/
 .firebaserc
 firebase-debug.log
 .firebase
