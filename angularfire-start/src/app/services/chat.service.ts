@@ -55,38 +55,109 @@ export class ChatService {
   user$ = user(this.auth);
 
   // Login Friendly Chat.
-  login() {}
+  login() {
+    signInWithPopup(this.auth, this.provider).then((result) => {
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      this.router.navigate(['/', 'chat']);
+      return credential;
+    })
+  }
 
   // Logout of Friendly Chat.
-  logout() {}
+  logout() {
+    signOut(this.auth).then(() => {
+      this.router.navigate(['/', 'login'])
+      console.log('signed out');
+    }).catch((error) => {
+      console.log('sign out error: ' + error);
+    })
+  }
 
   // Adds a text or image message to Cloud Firestore.
+
   addMessage = async (
     textMessage: string | null,
     imageUrl: string | null
-  ): Promise<void | DocumentReference<DocumentData>> => {};
+  ): Promise<void | DocumentReference<DocumentData>> => {
+    let data: any;
+    try {
+      const user = await firstValueFrom(this.user$);
+      if (textMessage && textMessage.length > 0) {
+        data = await addDoc(collection(this.firestore, 'messages'), {
+          name: user?.displayName,
+          text: textMessage,
+          profilePicUrl: user?.photoURL,
+          timestamp: serverTimestamp(),
+          uid: user?.uid
+        })
+      }
+      else if (imageUrl && imageUrl.length > 0) {
+        data = await addDoc(collection(this.firestore, 'messages'), {
+          name: user?.displayName,
+          imageUrl: imageUrl,
+          profilePicUrl: user?.photoURL,
+          timestamp: serverTimestamp(),
+          uid: user?.uid
+        });
+      }
+      return data;
+    }
+    catch (error) {
+      console.error('Error writing new message to Firebase Database', error);
+      return;
+    }
+  };
 
   // Saves a new message to Cloud Firestore.
   saveTextMessage = async (messageText: string) => {
-    return null;
+    return this.addMessage(messageText, '');
   };
 
-  // Loads chat messages history and listens for upcoming ones.
+  // Loads chat message history and listens for upcoming ones.
   loadMessages = () => {
-    return null as unknown;
-  };
+    // Create the query to load the last 12 messages and listen for new ones.
+    const recentMessagesQuery = query(collection(this.firestore, 'messages'), orderBy('timestamp', 'desc'), limit(12));
+    // Start listening to the query.
+    return collectionData(recentMessagesQuery);
+  }
 
   // Saves a new message containing an image in Firebase.
   // This first saves the image in Firebase storage.
-  saveImageMessage = async (file: any) => {};
+  saveImageMessage = async (file: any) => {
+    try {
+      // 1 - You add a message with a loading icon that will get updated with the shared image.
+      const messageRef = await this.addMessage(null, this.LOADING_IMAGE_URL);
 
-  async updateData(path: string, data: any) {}
+      // 2 - Upload the image to Cloud Storage.
+      const filePath = `${this.auth.currentUser?.uid}/${file.name}`;
+      const newImageRef = ref(this.storage, filePath);
+      const fileSnapshot = await uploadBytesResumable(newImageRef, file);
 
-  async deleteData(path: string) {}
+      // 3 - Generate a public URL for the file.
+      const publicImageUrl = await getDownloadURL(newImageRef);
 
-  getDocData(path: string) {}
+      console.log(messageRef);
+      console.log(publicImageUrl);
 
-  getCollectionData(path: string) {}
+      // 4 - Update the chat message placeholder with the image's URL.
+      messageRef ?
+        updateDoc(messageRef, {
+          imageUrl: publicImageUrl,
+          storageUri: fileSnapshot.metadata.fullPath
+        }) : null;
+
+    } catch (error) {
+      console.error('There was an error uploading a file to Cloud Storage:', error);
+    }
+  }
+
+  async updateData(path: string, data: any) { }
+
+  async deleteData(path: string) { }
+
+  getDocData(path: string) { }
+
+  getCollectionData(path: string) { }
 
   async uploadToStorage(
     path: string,
@@ -96,7 +167,7 @@ export class ChatService {
     return null;
   }
   // Requests permissions to show notifications.
-  requestNotificationsPermissions = async () => {};
+  requestNotificationsPermissions = async () => { };
 
-  saveMessagingDeviceToken = async () => {};
+  saveMessagingDeviceToken = async () => { };
 }

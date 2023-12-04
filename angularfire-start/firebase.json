@@ -3,24 +3,17 @@
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
-  "hosting": [
-    {
-      "source": ".",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ],
-      "frameworksBackend": {
-        "region": "us-central1"
-      }
-    },
-    {
-      "target": "friendlychat",
-      "source": ".",
-      "frameworksBackend": {}
+  "hosting": {
+    "source": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "frameworksBackend": {
+      "region": "asia-east1"
     }
-  ],
+  },
   "storage": {
     "rules": "storage.rules"
   },
@@ -35,7 +28,7 @@
       "port": 8080
     },
     "hosting": {
-      "port": 5000
+      "port": 5002
     },
     "storage": {
       "port": 9199
@@ -56,7 +49,8 @@
         "firebase-debug.*.log"
       ],
       "predeploy": [
-        "npm --prefix \"$RESOURCE_DIR\" run lint"
+        "npm --prefix \"$RESOURCE_DIR\" run lint",
+        "npm --prefix \"$RESOURCE_DIR\" run build"
       ]
     }
   ]
