@@ -1,3 +1,7 @@
 .dropdown:hover .dropdown-menu {
     display: block;
 }
+
+header {
+    background: linear-gradient(135deg, #66139a, #000000);
+}

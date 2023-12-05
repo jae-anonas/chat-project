@@ -1,0 +1,13 @@
+:root {
+  /* CSS HEX */
+  --eminence: #5a2e70ff;
+  --ultra-violet: #585480ff;
+
+  /* CSS HSL */
+  --eminence: hsla(280, 42%, 31%, 1);
+  --ultra-violet: hsla(245, 21%, 42%, 1);
+}
+
+div.base-div {
+  background-image: url("../assets/skelet0r-bg.png");
+}

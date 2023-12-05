@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -41,6 +41,7 @@ import { HeaderComponent } from './components/header/header.component';
     AppRoutingModule, 
     CommonModule, 
     FormsModule, 
+    ReactiveFormsModule,
     provideFirebaseApp(() => initializeApp({ "projectId": "project-base-firestore-406706", "appId": "1:760407907420:web:40e79458d8b58630b79a99", "storageBucket": "project-base-firestore-406706.appspot.com", "apiKey": "AIzaSyCIon4GrHVXKqAtyrxQOfLVCyoTEah_M5g", "authDomain": "project-base-firestore-406706.firebaseapp.com", "messagingSenderId": "760407907420", "measurementId": "G-KV9REW6YRR" })), 
     provideAuth(() => {
         const auth = getAuth();
