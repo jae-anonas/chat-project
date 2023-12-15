@@ -24,22 +24,22 @@ const {getFirestore} = require("firebase-admin/firestore");
 initializeApp();
 
 // Take the text parameter passed to this HTTP endpoint and insert it into
-// Firestore under the path /messages/:documentId/original
+// Firestore under the path /texts/:documentId/original
 exports.addMessage = onRequest(async (req, res) => {
     // Grab the text parameter.
     const original = req.query.text;
     // Push the new message into Firestore using the Firebase Admin SDK.
     const writeResult = await getFirestore()
-        .collection("messages")
+        .collection("texts")
         .add({original: original});
     // Send back a message that we've successfully written the message
     res.json({result: `Message with ID: ${writeResult.id} added.`});
   });
 
-// Listens for new messages added to /messages/:documentId/original
+// Listens for new messages added to /texts/:documentId/original
 // and saves an uppercased version of the message
-// to /messages/:documentId/uppercase
-exports.makeuppercase = onDocumentCreated("/messages/{documentId}", (event: any) => {
+// to /texts/:documentId/uppercase
+exports.makeuppercase = onDocumentCreated("/texts/{documentId}", (event: any) => {
     // Grab the current value of what was written to Firestore.
     const original = event.data.data().original;
   

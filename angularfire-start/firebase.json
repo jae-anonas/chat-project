@@ -9,7 +9,15 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
-    ]
+    ],
+  "rewrites": [ {
+    "source": "/addMessage",
+    "function": {
+      "functionId": "addMessage",
+      "region": "asia-east2",
+      "pinTag": true 
+    }
+  } ]
   },
   "storage": {
     "rules": "storage.rules"
